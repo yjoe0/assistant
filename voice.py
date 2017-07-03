@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
 from pyaudio import PyAudio, paInt16 
 import numpy as np 
-import wave 
-
+import wave
+from io import BytesIO
+import BD
+import tuling
 # 将data中的数据保存到名为filename的WAV文件中
 def save_wave_file(filename, data): 
-    wf = wave.open(filename, 'wb') 
+    f = BytesIO()
+    wf = wave.open(f, 'wb') 
     wf.setnchannels(1) 
     wf.setsampwidth(2) 
     wf.setframerate(SAMPLING_RATE) 
     wf.writeframes("".join(data)) 
-    wf.close() 
+    wf.close()
+    return f.getvalue()
 
 NUM_SAMPLES = 2000      # pyAudio内部缓存的块的大小
 SAMPLING_RATE = 8000    # 取样频率
-LEVEL = 1500            # 声音保存的阈值
-COUNT_NUM = 20          # NUM_SAMPLES个取样之内出现COUNT_NUM个大于LEVEL的取样则记录声音
-SAVE_LENGTH = 8         # 声音记录的最小长度：SAVE_LENGTH * NUM_SAMPLES 个取样
+LEVEL = 3000            # 声音保存的阈值
+COUNT_NUM = 30          # NUM_SAMPLES个取样之内出现COUNT_NUM个大于LEVEL的取样则记录声音
+SAVE_LENGTH = 4         # 声音记录的最小长度：SAVE_LENGTH * NUM_SAMPLES 个取样
 
 # 开启声音输入
 pa = PyAudio() 
@@ -39,7 +43,7 @@ while True:
         save_count = SAVE_LENGTH 
     else: 
         save_count -= 1 
-    print save_count
+
     if save_count < 0: 
         save_count = 0 
 
@@ -50,7 +54,14 @@ while True:
         # 将save_buffer中的数据写入WAV文件，WAV文件的文件名是保存的时刻
         if len(save_buffer) > 0: 
             filename = "tmp.wav" 
-            save_wave_file(filename, save_buffer) 
+            cacheFile = save_wave_file(filename, save_buffer) 
             save_buffer = [] 
             print filename, "saved" 
-            break
+            status,text = BD.radio2txt(cacheFile)
+            print text
+            if status:
+                r = tuling.getResTuLing(text)
+            else:
+                r = text
+            BD.text2audio(r)
+            # break
