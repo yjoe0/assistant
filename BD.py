@@ -19,7 +19,7 @@ def getToken():
         print  access_token
     else:
         return ''
-def radio2txt(file):
+def audio2txt(file):
     speech_data = file
     speech_base64=base64.b64encode(speech_data).decode('utf-8')
     speech_length=len(speech_data)
@@ -37,7 +37,7 @@ def radio2txt(file):
     r = requests.post(url, data = datas)
     result = json.loads(r.content)
     if result.has_key('result'):
-        return 1,result['result'][0]
+        return 1,result['result'][0][:-1]
     else:
         return 0,'不好意思，我没听明白'
 def text2audio(text):
@@ -53,7 +53,4 @@ def text2audio(text):
     print r
     
 if __name__ == "__main__":
-    text = radio2txt()
-    r = tuling.getRes(text)
-    print type(r)
-    text2audio(r)
+    print 'please import'
