@@ -50,7 +50,10 @@ def text2audio(text):
         mp3 = mp3play.load('tmp.mp3')
         mp3.play()
         time.sleep(mp3.seconds()+1)
-    print r
-    
+
+def play(path):
+    mp3 = mp3play.load(path)
+    mp3.play()
+    time.sleep(mp3.seconds()+1)
 if __name__ == "__main__":
-    print 'please import'
+    text2audio('我先睡了，有事叫我哦')
