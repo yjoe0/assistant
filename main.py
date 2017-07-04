@@ -5,9 +5,10 @@ import Audio
 import time
 instructs = [u'停止',u'关闭',u'关掉',u'退出']
 wakeUpIns = [u'小小',u'猪',u'工作']
+global OpenedAudio
 def loop(times):
     print 'wait wake up .....'
-    cacheAudio = Audio.startAccord(times)
+    cacheAudio = Audio.startAccord(OpenedAudio,times)
     if not cacheAudio:
         return False
     status,txt = BD.audio2txt( cacheAudio )
@@ -23,7 +24,7 @@ def loop(times):
     BD.text2audio(response)
     return True
 def wakeUp():
-    cacheAudio = Audio.startAccord()
+    cacheAudio = Audio.startAccord(OpenedAudio)
     status,txt = BD.audio2txt( cacheAudio )
     if status == 1:
         print txt
@@ -34,6 +35,7 @@ def wakeUp():
     return -1
 if __name__ == "__main__":
     print 'start'
+    OpenedAudio = Audio.getAudio()
     while True:
         wakeup = wakeUp()
         print 'wakeup %d'%(wakeup)
