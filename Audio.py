@@ -10,12 +10,7 @@ LEVEL = 2300            # 声音保存的阈值
 COUNT_NUM = 80          # NUM_SAMPLES个取样之内出现COUNT_NUM个大于LEVEL的取样则记录声音
 SAVE_LENGTH = 4         # 声音记录的最小长度：SAVE_LENGTH * NUM_SAMPLES 个取样
 
-def getAudio():
-    # 开启声音输入
-    pa = PyAudio() 
-    stream = pa.open(format=paInt16, channels=1, rate=8000, input=True, 
-                    frames_per_buffer=2000) 
-    return stream
+
 # 将data中的数据保存到名为filename的WAV文件中
 def save_wave_file(filename, data): 
     f = BytesIO()
@@ -27,7 +22,12 @@ def save_wave_file(filename, data):
     wf.close()
     return f.getvalue()
 
-def startAccord(stream,Times=100):
+def startAccord(Times=100):
+    # 开启声音输入
+    pa = PyAudio() 
+    stream = pa.open(format=paInt16, channels=1, rate=SAMPLING_RATE, input=True, 
+                    frames_per_buffer=NUM_SAMPLES) 
+
     save_count = 0 
     save_buffer = [] 
 
