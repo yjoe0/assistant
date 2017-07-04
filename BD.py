@@ -39,6 +39,9 @@ def audio2txt(file):
     if result.has_key('result'):
         return 1,result['result'][0][:-1]
     else:
+        mp3 = mp3play.load('media/failed.mp3')
+        mp3.play()
+        time.sleep(mp3.seconds()+1)
         return 0,'不好意思，我没听明白'
 def text2audio(text):
     cuid = "armbian-yjoe0"   # MAC address
@@ -56,4 +59,4 @@ def play(path):
     mp3.play()
     time.sleep(mp3.seconds()+1)
 if __name__ == "__main__":
-    text2audio('我先睡了，有事叫我哦')
+    text2audio('不好意思，我没听明白')

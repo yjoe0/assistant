@@ -60,10 +60,12 @@ def startAccord(Times=100):
                 filename = "tmp.wav" 
                 cacheFile = save_wave_file(filename, save_buffer) 
                 save_buffer = [] 
+                pa.close(stream)
                 print filename, "saved" 
                 return cacheFile
                 break
         if Times < 0:
+            pa.close(stream)
             return False
             break
 if __name__ == "__main__":
