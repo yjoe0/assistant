@@ -6,8 +6,8 @@ from io import BytesIO
 
 NUM_SAMPLES = 2000      # pyAudio内部缓存的块的大小
 SAMPLING_RATE = 8000    # 取样频率
-LEVEL = 2300            # 声音保存的阈值
-COUNT_NUM = 80          # NUM_SAMPLES个取样之内出现COUNT_NUM个大于LEVEL的取样则记录声音
+LEVEL = 1300            # 声音保存的阈值
+COUNT_NUM = 30          # NUM_SAMPLES个取样之内出现COUNT_NUM个大于LEVEL的取样则记录声音
 SAVE_LENGTH = 4         # 声音记录的最小长度：SAVE_LENGTH * NUM_SAMPLES 个取样
 
 

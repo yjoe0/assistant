@@ -6,18 +6,21 @@ import time
 instructs = [u'停止',u'关闭',u'关掉',u'退出']
 wakeUpIns = [u'小小',u'猪',u'工作']
 def loop(times):
-    print 'working.....'
+    print 'wait wake up .....'
     cacheAudio = Audio.startAccord(times)
     if not cacheAudio:
         return False
     status,txt = BD.audio2txt( cacheAudio )
+
     if status == 1:
         print txt
         if txt in instructs:
             BD.text2audio('即将退出')
             exit()
         response = TuLing.getResTuLing( txt )
-        BD.text2audio(response)
+    else:
+        response = txt
+    BD.text2audio(response)
     return True
 def wakeUp():
     cacheAudio = Audio.startAccord()
