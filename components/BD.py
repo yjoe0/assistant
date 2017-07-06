@@ -12,13 +12,20 @@ def getToken():
     secretKey = "475d29a02a98877e15c1cd8c846e63c5"
     auth_url = "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=" + apiKey + "&client_secret=" + secretKey;  
   
-    res = requests.get(auth_url)
+    try:
+        res = requests.get(auth_url)
+    except Exception as e:
+        print 'net work failed: %s'%(e)
+        exit()
     if res.status_code == 200:
         json_data = res.content
         access_token = json.loads(json_data)['access_token']
-        print  access_token
+        return  access_token
     else:
-        return ''
+        print 'BaiDU yuyin access_token get failed:'
+        print res
+        exit()
+
 def audio2txt(file):
     speech_data = file
     speech_base64=base64.b64encode(speech_data).decode('utf-8')
@@ -34,16 +41,26 @@ def audio2txt(file):
     }
     datas = json.dumps(data).encode('utf-8')
     url = 'http://vop.baidu.com/server_api'
-    r = requests.post(url, data = datas)
+    try:
+        r = requests.post(url, data = datas)
+    except Exception as e:
+        print 'net work failed: %s'%(e)
+        exit()
     result = json.loads(r.content)
     if result.has_key('result'):
-        return 1,result['result'][0][:-1]
+        return True,result['result'][0][:-1]
     else:
-        return 0,'不好意思，我没听明白'
+        return False,'不好意思，我没听明白'
+
+
 def text2audio(text):
     cuid = "armbian-yjoe0"   # MAC address
     baidu_url = "http://tsn.baidu.com/text2audio?tex=" + urllib.quote(text) + "&lan=zh&cuid=" + cuid + "&ctp=1&tok=" + getToken()
-    r = requests.get(baidu_url)
+    try:
+        r = requests.get(baidu_url)
+    except Exception as e:
+        print 'net work failed: %s'%(e)
+        exit()
     if r.status_code == 200:
         with open('tmp.mp3', 'wb') as mp3:
             mp3.write(r.content)

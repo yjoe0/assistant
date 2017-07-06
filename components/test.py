@@ -1,5 +1,5 @@
 from Audio import Audio
 
 a = Audio()
-a.startAccord()
-a.startAccord()
+a.startAccord(2)
+a.startAccord(2)

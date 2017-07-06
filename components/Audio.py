@@ -14,6 +14,9 @@ SAVE_LENGTH = 4         # 声音记录的最小长度：SAVE_LENGTH * NUM_SAMPLE
 
 # 单例模式，避免麦克风频繁打开
 class GetAudio(type):  
+    '''
+        docs:单例模式，避免Audio被重复创建，因为MIC不能被多次打开
+    '''
     def __init__(cls, name, bases, dict):  
         super(GetAudio, cls).__init__(name, bases, dict)  
         cls._instance = None  
@@ -25,12 +28,25 @@ class GetAudio(type):
 
 
 class Audio(object):  
+    '''
+        docs:PyAudio 录音类
+        methods: startAccord
+    '''
     __metaclass__ = GetAudio
     pa = PyAudio() 
-    stream = pa.open(format=paInt16, channels=1, rate=SAMPLING_RATE, input=True, frames_per_buffer=NUM_SAMPLES)
+    try:
+        stream = pa.open(format=paInt16, channels=1, rate=SAMPLING_RATE, input=True, frames_per_buffer=NUM_SAMPLES)
+    except Exception as e:
+        print 'MIC open failed: %s'%(e)
+        exit()
+
 
     # 将data中的数据保存到名为filename的WAV文件中
     def save_wave_file(self, filename, data): 
+        '''
+            docs:保存Wav文件并返回音频流
+            文件是保存在BytesIO()中，如要保存下wav文件，将wf = wave.open(f, 'wb') 中的f改为任意文件名即可
+        '''
         f = BytesIO()
         wf = wave.open(f, 'wb') 
         wf.setnchannels(1) 
@@ -40,10 +56,12 @@ class Audio(object):
         wf.close()
         return f.getvalue()
 
-    def test(self):
-        print self.stream
     # 开始录音,默认100一直循环录音,小于100时循环设定的次数
     def startAccord(self, Times=100):
+        '''
+        docs: Audio startAccord() 不设置Times值时会一直循环等待，直到获取到满足条件的录音流
+        设置Times小于100时，会进入Times循环次数，返回值可能是音频流，也有可能返回False
+        '''
         save_count = 0 
         save_buffer = [] 
         stream = self.stream
@@ -84,7 +102,3 @@ class Audio(object):
             if Times < 0:
                 return False
                 break
-
-
-
-# a = Audio()
