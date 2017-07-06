@@ -2,7 +2,11 @@
 import requests
 import json
 import urllib
-def getResTuLing(info):
+
+def load_TuLing(core):
+    core.getResTuLing = getResTuLing
+
+def getResTuLing(self, info):
     postData = {
         "key": "1cd3fb922c85135f9e198c4319cae0fe",
         "info": info,
@@ -14,7 +18,7 @@ def getResTuLing(info):
         return data.encode('utf-8')
     else:
         return '请求失败'
-def getResQYK(info):
+def getResQYK(self, info):
     r = requests.get('http://api.qingyunke.com/api.php?key=free&appid=0&msg=%s'%(info))
     if r.status_code == 200:
         data = json.loads(r.content)['content']

@@ -12,6 +12,10 @@ COUNT_NUM = 30          # NUM_SAMPLES个取样之内出现COUNT_NUM个大于LEVE
 SAVE_LENGTH = 4         # 声音记录的最小长度：SAVE_LENGTH * NUM_SAMPLES 个取样
 
 
+def load_Audio(core):
+    core.startAccord = Audio().startAccord
+
+
 # 单例模式，避免麦克风频繁打开
 class GetAudio(type):  
     '''
