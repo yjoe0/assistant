@@ -6,7 +6,7 @@ system = platform.system()
 if system == 'Windows':
     install_requires = ['PyAudio', 'mp3play','numpy','requests']
 elif system == 'Linux':
-    install_requires = ['PyAudio', 'mpg123','numpy','requests']
+    install_requires = ['PyAudio','numpy','requests']
 setup(
       name="assistant",
       version="0.10",
