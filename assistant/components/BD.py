@@ -65,7 +65,7 @@ def audio2txt(self, file):
         return False,'不好意思，我没听明白'
 
 
-def txt2audio(self, text, path='/tmp.mp3'):
+def txt2audio(self, text, path='./tmp.mp3'):
     cuid = "armbian-yjoe0"   # MAC address
     baidu_url = "http://tsn.baidu.com/text2audio?tex=" + urllib.quote(text) + "&lan=zh&cuid=" + cuid + "&ctp=1&tok=" + getToken(self)
     try:
