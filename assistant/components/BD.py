@@ -3,7 +3,7 @@ import requests
 import base64
 import json
 import urllib
-import mp3play
+import platform
 import time
 import os
 
@@ -82,10 +82,14 @@ def play(self, path):
     if not os.path.exists(path):
         print '%s not exists'%(path)
         exit()
-
-    mp3 = mp3play.load(path)
-    mp3.play()
-    time.sleep(mp3.seconds()+0.1)
+    UserSys = platform.system()
+    if UserSys == 'Windows':
+        import mp3play
+        mp3 = mp3play.load(path)
+        mp3.play()
+        time.sleep(mp3.seconds()+0.1)
+    elif UserSys == 'Linux':
+        os.system("mpg123 -q %s"%(path))
 if __name__ == "__main__":
     txt2audio('','我先睡了，有事叫我哦')
     # play('../media/help.mp3')
