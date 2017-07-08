@@ -34,8 +34,8 @@ class Audio(object):
     LEVEL = 1300
     COUNT_NUM = 30
     SAVE_LENGTH = 4
+    pa = PyAudio() 
     try:
-        pa = PyAudio() 
         stream = pa.open(format=paInt16, channels=1, rate=SAMPLING_RATE, input=True, frames_per_buffer=NUM_SAMPLES)
     except Exception as e:
         print 'MIC open failed: %s'%(e)
@@ -76,12 +76,6 @@ class Audio(object):
         save_buffer = [] 
         stream = self.stream
         
-        NUM_SAMPLES = self.NUM_SAMPLES 
-        SAMPLING_RATE = self.SAMPLING_RATE 
-        LEVEL = self.LEVEL 
-        COUNT_NUM = self.COUNT_NUM 
-        SAVE_LENGTH = self.SAVE_LENGTH 
-
         if self.debug:
             print 'start accord'
 
@@ -90,16 +84,16 @@ class Audio(object):
             if Times != 100:
                 Times -=1
             # 读入NUM_SAMPLES个取样
-            string_audio_data = stream.read(NUM_SAMPLES) 
+            string_audio_data = stream.read(self.NUM_SAMPLES) 
             # 将读入的数据转换为数组
             audio_data = np.fromstring(string_audio_data, dtype=np.short) 
             # 计算大于LEVEL的取样的个数
-            large_sample_count = np.sum( audio_data > LEVEL ) 
+            large_sample_count = np.sum( audio_data > self.LEVEL ) 
             if self.debug:
                 print "max audio is %d"%( np.max(audio_data) )
             # 如果个数大于COUNT_NUM，则至少保存SAVE_LENGTH个块
-            if large_sample_count > COUNT_NUM: 
-                save_count = SAVE_LENGTH 
+            if large_sample_count > self.COUNT_NUM: 
+                save_count = self.SAVE_LENGTH 
             else: 
                 save_count -= 1 
 
