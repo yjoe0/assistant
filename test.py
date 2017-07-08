@@ -2,8 +2,8 @@
 import assistant
 apiKey = "EXYmNkELXIqXkWN5wyyEsIyG"  
 assistant.txt2audio('哈哈哈')
-# secretKey = "475d29a02a98877e15c1cd8c846e63c5"
-# assistant.setBdKey(apiKey, secretKey)
+secretKey = "475d29a02a98877e15c1cd8c846e63c5"
+assistant.setBdKey(apiKey, secretKey)
 
 # print assistant.getToken()
 # while True:
