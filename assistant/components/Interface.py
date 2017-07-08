@@ -6,17 +6,21 @@ import TuLing
 # 指令集
 instructs = [u'停止',u'关闭',u'关掉',u'退出']
 # 唤醒集
-wakeUpIns = [u'开始',u'猪',u'工作']
+
 
 def load_interface(core):
-    core.wakeUp = wakeUp
-    core.listen = listen
+    core.wakeUp     = wakeUp
+    core.listen     = listen
+    core.wakeUpIns  = [u'开始',u'猪',u'工作']
+
+def setWakeUpIns(self. wakeUpIns):
+    self.wakeUpIns = wakeUpIns
 def wakeUp(self=None):
     cacheAudio = Audio().startAccord()
     status,txt = BD.audio2txt( self, cacheAudio )
     if status:
         print "you have said:%s"%(txt)
-        if txt in wakeUpIns:
+        if txt in self.wakeUpIns:
             BD.txt2audio(self, '您好， 有什么帮助的吗')
             return 1
     return -1
