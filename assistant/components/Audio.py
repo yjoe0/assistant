@@ -34,27 +34,21 @@ class Audio(object):
     LEVEL = 1300
     COUNT_NUM = 30
     SAVE_LENGTH = 4
+    try:
+        pa = PyAudio() 
+        stream = pa.open(format=paInt16, channels=1, rate=SAMPLING_RATE, input=True, frames_per_buffer=NUM_SAMPLES)
+    except Exception as e:
+        print 'MIC open failed: %s'%(e)
+        exit()
+
     def setAudioDebug(self, debug = False):
         self.debug = debug
+
     # 设置开始录音的条件以及录音设置
-    def setAudio(self,NUM_SAMPLES = 2000 ,SAMPLING_RATE = 8000 ,LEVEL = 1300 ,COUNT_NUM = 30 ,SAVE_LENGTH = 4):
-        self.NUM_SAMPLES = NUM_SAMPLES if NUM_SAMPLES else self.NUM_SAMPLES
-        self.SAMPLING_RATE = SAMPLING_RATE if SAMPLING_RATE else self.SAMPLING_RATE
+    def setAudio(self, LEVEL = 1300 ,COUNT_NUM = 30 ,SAVE_LENGTH = 4):
         self.LEVEL = LEVEL if LEVEL else self.LEVEL
         self.COUNT_NUM = COUNT_NUM if COUNT_NUM else self.COUNT_NUM
         self.SAVE_LENGTH = SAVE_LENGTH if SAVE_LENGTH else self.SAVE_LENGTH
-
-    def getStream(self):
-        pa = PyAudio() 
-        NUM_SAMPLES = self.NUM_SAMPLES
-        SAMPLING_RATE = self.SAMPLING_RATE
-        try:
-            stream = pa.open(format=paInt16, channels=1, rate=SAMPLING_RATE, input=True, frames_per_buffer=NUM_SAMPLES)
-            return stream
-        except Exception as e:
-            print 'MIC open failed: %s'%(e)
-            exit()
-
 
 
     # 将data中的数据保存到名为filename的WAV文件中
@@ -80,7 +74,7 @@ class Audio(object):
         '''
         save_count = 0 
         save_buffer = [] 
-        stream = self.getStream()
+        stream = self.stream
         
         NUM_SAMPLES = self.NUM_SAMPLES 
         SAMPLING_RATE = self.SAMPLING_RATE 
