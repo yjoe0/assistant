@@ -16,10 +16,8 @@ def load_BD(core):
 def setBdKey(self, apiKey, secretKey):
     self.apiKey = apiKey
     self.secretKey = secretKey
+
 def getToken(self):
-    return '24.1b9356047b34e68d578d16a91caa7d0d.2592000.1501600048.282335-9232460'
-    # apiKey = "EXYmNkELXIqXkWN5wyyEsIyG"  
-    # secretKey = "475d29a02a98877e15c1cd8c846e63c5"
     apiKey = self.apiKey
     secretKey = self.secretKey
     auth_url = "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=" + apiKey + "&client_secret=" + secretKey;  

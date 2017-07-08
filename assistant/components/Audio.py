@@ -4,18 +4,10 @@ import numpy as np
 import wave
 from io import BytesIO
 
-
-NUM_SAMPLES = 2000      # pyAudio内部缓存的块的大小
-SAMPLING_RATE = 8000    # 取样频率
-LEVEL = 1300            # 声音保存的阈值
-COUNT_NUM = 30          # NUM_SAMPLES个取样之内出现COUNT_NUM个大于LEVEL的取样则记录声音
-SAVE_LENGTH = 4         # 声音记录的最小长度：SAVE_LENGTH * NUM_SAMPLES 个取样
-
-
 def load_Audio(core):
     core.startAccord = Audio().startAccord
-
-
+    core.setAudio    = Audio().setAudio
+    core.setAudioDebug = Audio().setAudioDebug
 # 单例模式，避免麦克风频繁打开
 class GetAudio(type):  
     '''
@@ -30,19 +22,39 @@ class GetAudio(type):
         return cls._instance  
 
 
-
 class Audio(object):  
     '''
         docs:PyAudio 录音类
         methods: startAccord
     '''
     __metaclass__ = GetAudio
-    pa = PyAudio() 
-    try:
-        stream = pa.open(format=paInt16, channels=1, rate=SAMPLING_RATE, input=True, frames_per_buffer=NUM_SAMPLES)
-    except Exception as e:
-        print 'MIC open failed: %s'%(e)
-        exit()
+    debug = False
+    NUM_SAMPLES = 2000
+    SAMPLING_RATE = 8000
+    LEVEL = 1300
+    COUNT_NUM = 30
+    SAVE_LENGTH = 4
+    def setAudioDebug(self, debug = False):
+        self.debug = debug
+    # 设置开始录音的条件以及录音设置
+    def setAudio(self,NUM_SAMPLES = 2000 ,SAMPLING_RATE = 8000 ,LEVEL = 1300 ,COUNT_NUM = 30 ,SAVE_LENGTH = 4):
+        self.NUM_SAMPLES = NUM_SAMPLES if NUM_SAMPLES else self.NUM_SAMPLES
+        self.SAMPLING_RATE = SAMPLING_RATE if SAMPLING_RATE else self.SAMPLING_RATE
+        self.LEVEL = LEVEL if LEVEL else self.LEVEL
+        self.COUNT_NUM = COUNT_NUM if COUNT_NUM else self.COUNT_NUM
+        self.SAVE_LENGTH = SAVE_LENGTH if SAVE_LENGTH else self.SAVE_LENGTH
+
+    def getStream(self):
+        pa = PyAudio() 
+        NUM_SAMPLES = self.NUM_SAMPLES
+        SAMPLING_RATE = self.SAMPLING_RATE
+        try:
+            stream = pa.open(format=paInt16, channels=1, rate=SAMPLING_RATE, input=True, frames_per_buffer=NUM_SAMPLES)
+            return stream
+        except Exception as e:
+            print 'MIC open failed: %s'%(e)
+            exit()
+
 
 
     # 将data中的数据保存到名为filename的WAV文件中
@@ -55,7 +67,7 @@ class Audio(object):
         wf = wave.open(f, 'wb') 
         wf.setnchannels(1) 
         wf.setsampwidth(2) 
-        wf.setframerate(SAMPLING_RATE) 
+        wf.setframerate( self.SAMPLING_RATE ) 
         wf.writeframes("".join(data)) 
         wf.close()
         return f.getvalue()
@@ -68,8 +80,16 @@ class Audio(object):
         '''
         save_count = 0 
         save_buffer = [] 
-        stream = self.stream
-        print 'start accord'
+        stream = self.getStream()
+        
+        NUM_SAMPLES = self.NUM_SAMPLES 
+        SAMPLING_RATE = self.SAMPLING_RATE 
+        LEVEL = self.LEVEL 
+        COUNT_NUM = self.COUNT_NUM 
+        SAVE_LENGTH = self.SAVE_LENGTH 
+
+        if self.debug:
+            print 'start accord'
 
         while True: 
             #时间控制
@@ -81,7 +101,8 @@ class Audio(object):
             audio_data = np.fromstring(string_audio_data, dtype=np.short) 
             # 计算大于LEVEL的取样的个数
             large_sample_count = np.sum( audio_data > LEVEL ) 
-            print np.max(audio_data) 
+            if self.debug:
+                print "max audio is %d"%( np.max(audio_data) )
             # 如果个数大于COUNT_NUM，则至少保存SAVE_LENGTH个块
             if large_sample_count > COUNT_NUM: 
                 save_count = SAVE_LENGTH 
@@ -100,7 +121,8 @@ class Audio(object):
                     filename = "tmp.wav" 
                     cacheFile = self.save_wave_file(filename, save_buffer) 
                     save_buffer = [] 
-                    print filename, "saved" 
+                    if self.debug:
+                        print filename, "saved" 
                     return cacheFile
                     break
             if Times < 0:

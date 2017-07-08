@@ -13,12 +13,15 @@ def new_instance():
 
 originInstance = new_instance()
 
+#in Interface
 wakeUp          = originInstance.wakeUp
 listen          = originInstance.listen
+setWakeUpIns    = originInstance.setWakeUpIns
 
 # in Audio
 startAccord     = originInstance.startAccord
-
+setAudio        = originInstance.setAudio
+setAudioDebug   = originInstance.setAudioDebug
 # in BD
 setBdKey        = originInstance.setBdKey
 getToken        = originInstance.getToken
@@ -28,5 +31,5 @@ play            = originInstance.play
 
 
 # in TuLing
-getResTuLing    = originInstance.getResTuLing
-
+getTuLingRes    = originInstance.getTuLingRes
+setTuLingKey    = originInstance.setTuLingKey

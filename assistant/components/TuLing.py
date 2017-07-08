@@ -4,11 +4,15 @@ import json
 import urllib
 
 def load_TuLing(core):
-    core.getResTuLing = getResTuLing
+    core.getTuLingRes = getTuLingRes
+    core.setTuLingKey = setTuLingKey
 
-def getResTuLing(self, info):
+def setTuLingKey(self, key):
+    self.TuLingkey = key
+
+def getTuLingRes(self, info):
     postData = {
-        "key": "1cd3fb922c85135f9e198c4319cae0fe",
+        "key": self.TuLingkey,
         "info": info,
         "userid":"12345678"
     }
@@ -18,7 +22,7 @@ def getResTuLing(self, info):
         return data.encode('utf-8')
     else:
         return '请求失败'
-def getResQYK(self, info):
+def getQYKRes(self, info):
     r = requests.get('http://api.qingyunke.com/api.php?key=free&appid=0&msg=%s'%(info))
     if r.status_code == 200:
         data = json.loads(r.content)['content']
@@ -26,5 +30,3 @@ def getResQYK(self, info):
     else:
         return '请求失败'
 
-if __name__ == "__main__":
-    print getResQYK('给我唱首歌吧')
