@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import assistant
-apiKey = "EXYmNkELXIqXkWN5wyyEsIyG"  
-secretKey = "475d29a02a98877e15c1cd8c846e63c5"
-TuLingKey = '1cd3fb922c85135f9e198c4319cae0fe'
+apiKey = 'xxxxxxxxxxxxxx'  
+secretKey = 'xxxxxxxxxxxxxxx'
+TuLingKey = 'xxxxxxxxxxxxxxxxxxxx'
 assistant.setBdKey(apiKey, secretKey)
 assistant.txt2audio('哈哈哈')
 
