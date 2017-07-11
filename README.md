@@ -12,14 +12,21 @@ Linux下：
 ['PyAudio'，','numpy','requests','mpg123']   
 因为mp3play不支持在linux下运行。因此需要手动安装mpg123.（直接apt-get install mpg123就好）
 
-## assistant目前提供接口如下：    
+
+## assistant目前提供接口如下： 
+**setDebug**:assistant.setDebug(True)   
+返回参数：无   
+打印过程中的调试信息
+
+---
 **wakeUp**：
     assistant.wakeUp()        
     返回参数：True|False   
-    热词唤醒，默认设置[u'开始',u'工作']唤醒，可以自行参考Interface文件来修改wakeUp方法   
+    热词唤醒，默认设置[u'开始',u'工作']唤醒，当语音识别结果符合设置的热词表中的某一个即可唤醒（返回True），可以自行参考Interface文件来修改wakeUp方法   
 
 ---
 **setWakeUpIns**: assistant.setWakeUpIns()   
+返回参数： 无  
 设置唤醒热词，参数为list unicode形式，例如[u'工作',u'开始]
 
 ---
@@ -29,20 +36,19 @@ Linux下：
     唤醒后开始监听语音，并调用图灵接口自动应答，参考Interface文件修改，参数times传递给下面startAccord     
 
 ---
-**setAudioDebug**: assistant.setAudioDebug()  
-设置录音采集的信息是否打印出来
 
----
 **setAudio**: assistant.setAudio()   
 设置录音条件，有以下参数：
     
     SAMPLING_RATE = 8000  采样率，8k或16k,默认8k
-    NUM_SAMPLES = 2000    音频缓冲块大小，默认即可
-    LEVEL = 1300          开始录音的音量大小，越大表示开始采集的音量要求越高，
-                    可以使用上面的setAudioDebug(True)来查看每次采集时最大的音量，合理设置可以避免误报
-    COUNT_NUM = 30       采集音量数目，表示在每次缓冲块中符合LEVEL条件的数量大小，合理设置可以避免噪音
-    SAVE_LENGTH = 4     表示最小采集数目，即在采集到符合条件的音频后4次循环采集都没有声音后就开始
-    保存，合理设置可以避免一句话录音不完整，或者录音时间太长
+    NUM_SAMPLES = 2000 音频缓冲块大小，默认即可
+    LEVEL = 1300  开始录音的音量大小，越大表示开始采集的音量要求越高，可以使用上面的setAudioDebug(True)来查看每次采集时最大的音量
+    COUNT_NUM = 30
+    SAVE_LENGTH = 4
+    
+
+---
+
 **startAccord**：assistant.startAccord(times)    
     返回参数：捕获到的音频流|False（在设定times循环次数内没有捕获到符合条件的音频则返回False）
     开始录音，times表示等待录音时长，默认100表示一直等待直到获取到符合条件的音频流，
@@ -75,7 +81,7 @@ Linux下：
 
 ---
 
-**getTuLingRes**：assistant.getTuLingRes(info)   
+**getResTuLing**：assistant.getResTuLing(info)   
     返回图灵接口的返回数据
 
 ---
